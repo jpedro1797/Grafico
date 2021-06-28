@@ -1,0 +1,236 @@
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Teste Grafico</title>
+</head>
+
+<body>
+
+    <label for="Ano">Selecione o ano:</label>
+
+    <input type="text" id="ano">
+
+    <button id="renderBtn" type="submit">
+        Gerar Grafico
+    </button>
+    
+
+    <div class="container1" style="position: relative; height:98vh; width:95vw">
+        <canvas id="linechart"></canvas>
+    </div>
+    <div class="container2" style="position: relative; height:50vh; width:49vw; overflow-y:scroll;">
+        <canvas id="barchart" height="3900px"></canvas>
+    </div>
+    <div class="container3" style="position: relative; height:40; width:46vw; top:-470; left: 1000px;">
+        <canvas id="barchart2"></canvas>
+    </div>
+</body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+<script>
+
+    $("#renderBtn").click(
+        function () {
+            var ValorAno = document.getElementById('ano').value;
+            $(document).ready(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "conexao_Atendimentos.php",
+                    dataType: "json",
+                    data: {Valor_Ano: ValorAno},
+                    success: function (data) {
+                        var DataRefarray = [];
+                        var Qtdearray = [];
+                        for (var i = 0; i < data.length; i++) {
+                            DataRefarray.push(data[i].DataRef);
+                            Qtdearray.push(data[i].Qtde);
+                        }
+                        grafico(DataRefarray, Qtdearray);
+                    }
+                })
+
+                function grafico(DataRef, Qtde) {
+                    var ctx = document.getElementById("linechart").getContext('2d');
+                    var linechart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: DataRef,
+                            datasets: [{
+                                label: "Atendimentos Realizados",
+                                data: Qtde,
+                                backgroundColor: [
+                                    'rgba(25, 50, 29, 0.4)',
+                                    'rgba(10, 130, 5, 0.4)',
+                                    'rgba(189, 450, 2, 0.4)',
+                                    'rgba(361, 23, 7, 0.4)',
+                                    'rgba(80, 302, 10, 0.4)',
+                                    'rgba(153, 183, 239, 0.4)',
+                                    'rgba(26, 3, 67, 0.4)',
+                                    'rgba(250, 35, 196, 0.4)',
+                                    'rgba(289, 100, 6, 0.4)',
+                                    'rgba(63, 29, 4, 0.4)',
+                                    'rgba(177, 244, 234, 0.4)',
+                                    'rgba(100, 2, 27, 0.4)',
+                                ],
+                                borderWidth: 3
+                            },]
+                        },
+                        options: {
+                            layout: {
+                                padding: {
+                                    bottom: 50
+                                }
+                            },
+                            title: {
+                                display: true,
+                                fontSize: 20,
+                                text: "Relatorio de Atendimentos"
+                            },
+                            labels: {
+                                fontStyle: "bold"
+                            }
+                        }
+                    })
+                };
+            });
+        }
+    );
+
+</script>
+
+<script>
+
+    $("#renderBtn").click(
+        function () {
+            var ValorAno = document.getElementById('ano').value;
+            $(document).ready(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "conexao_Exames.php",
+                    dataType: "json",
+                    data: {Valor_Ano: ValorAno},
+                    success: function (data) {
+                        var Nome_Examearray = [];
+                        var Qtdearray = [];
+                        for (var i = 0; i < data.length; i++) {
+                            Nome_Examearray.push(data[i].Nome_Exame);
+                            Qtdearray.push(data[i].Qtde);
+                        }
+                        grafico(Nome_Examearray, Qtdearray);
+                    }
+                })
+
+                function grafico(Nome_Exame, Qtde) {
+                    var ctx = document.getElementById("barchart").getContext('2d');
+                    var linechart = new Chart(ctx, {
+                        type: 'horizontalBar',
+                        data: {
+                            labels: Nome_Exame,
+                            datasets: [{
+                                label: "Quantidade de Exames",
+                                data: Qtde,
+                                backgroundColor: 'rgba(32, 109, 197, 0.7)',
+                                borderWidth: 2
+                            },]
+                        },
+                        options: {
+                            layout: {
+                                padding: {
+                                }
+                            },
+                            scales: {
+                                yAxes: [{
+                                    barThickness: 10,
+                                    barPercentage: 10,
+                                    categoryPercentage: 10,
+                                }]
+                            },
+                            title: {
+                                display: true,
+                                fontSize: 20,
+                                text: "Relatorio de Exames"
+                            },
+                            labels: {
+                                fontStyle: "bold"
+                            },
+                        }
+                    })
+                };
+            });
+        }
+    );
+
+</script>
+
+<script>
+
+    $("#renderBtn").click(
+        function () {
+            var ValorAno = document.getElementById('ano').value;
+            $(document).ready(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "conexao_NovosPacientes.php",
+                    dataType: "json",
+                    data: {Valor_Ano: ValorAno},
+                    success: function (data) {
+                        var DataRefarray = [];
+                        var Qtdearray = [];
+                        for (var i = 0; i < data.length; i++) {
+                            DataRefarray.push(data[i].DataRef);
+                            Qtdearray.push(data[i].Qtde);
+                        }
+                        grafico(DataRefarray, Qtdearray);
+                    }
+                })
+
+                function grafico(DataRef, Qtde) {
+                    var ctx = document.getElementById("barchart2").getContext('2d');
+                    var linechart = new Chart(ctx, {
+                        type: 'horizontalBar',
+                        data: {
+                            labels: DataRef,
+                            datasets: [{
+                                label: "Quantidade de Novos Pacientes",
+                                data: Qtde,
+                                backgroundColor: 'rgba(32, 109, 197, 0.7)',
+                                borderWidth: 2
+                            },]
+                        },
+                        options: {
+                            layout: {
+                                padding: {
+                                }
+                            },
+                            scales: {
+                                xAxes: [{
+                                    ticks: {
+                                        beginAtZero: true
+                                    }
+                                }]
+                            },
+                            title: {
+                                display: true,
+                                fontSize: 20,
+                                text: "Novos Pacientes Cadastrados"
+                            },
+                            labels: {
+                                fontStyle: "bold"
+                            },
+                        }
+                    })
+                };
+            });
+        }
+    );
+
+</script>
+
+</html>
